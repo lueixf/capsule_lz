@@ -2,6 +2,7 @@ from datetime import date, datetime
 import pandas as pd
 import os
 import datetime
+import matplotlib.pyplot as plt
 
 def log(func):
     def wrapper(*args, **kwargs):
@@ -10,7 +11,7 @@ def log(func):
         username = os.getlogin()
         func_name = func.__name__
         formatted_date = date.today().strftime("%d-%m-%Y")
-        formatted_time = datetime.now().strftime("%H:%M:%S")
+        formatted_time = datetime.datetime.now()
         
         if os.path.exists("logs.csv"):
             file_df = pd.read_csv('logs.csv')
@@ -35,3 +36,31 @@ def log(func):
 
         return original_result
     return wrapper
+
+
+
+
+class Price():
+    def __init__(self):
+        self.avocado = pd.read_csv('avocado.csv')
+    @log
+    def main(self):
+        x = self.avocado['date'].tolist()
+        y = self.avocado['price'].tolist()
+        fig, ax = plt.subplots()
+        ax.set_facecolor('#B3DCFD')
+        plt.plot(x, y, label='Avocado', marker = 'o', color = 'white')
+        plt.xlabel('Дата')
+        plt.xticks(rotation = 'vertical')
+        plt.ylabel('Стоимость')
+        plt.title('Стоимость')
+        plt.show()
+    
+    def __del__(self): 
+        print("del done")
+        
+def main():
+    price =Price()
+    price.main()
+if __name__ == "__main__":
+    main()
